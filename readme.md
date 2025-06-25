@@ -20,7 +20,7 @@ Runs entirely on your local machine—no keys, no OpenAI API, no server fees.
 
 ## 🖥️ Demo (GIF)
 
-![demo gif](docs/demo.gif)
+![demo gif](docs/demo.png)
 
 ---
 
