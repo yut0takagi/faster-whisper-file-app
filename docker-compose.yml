@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8501:8501"
+    environment:
+      # Avoid pip root warning noise in logs
+      - PIP_ROOT_USER_ACTION=ignore
+      # Cache directory for model downloads (mounted below)
+      - HF_HOME=/root/.cache/huggingface
+    volumes:
+      # Persist model + tokenizer downloads across runs
+      - model_cache:/root/.cache
+    restart: unless-stopped
+
+volumes:
+  model_cache:
+
+# GPU note:
+# To use an NVIDIA GPU, prefer `docker run --gpus all ...` or
+# run compose with: `docker compose run --gpus all app`
+# Compose's deploy.resources GPU settings are Swarm-only and ignored locally.
+

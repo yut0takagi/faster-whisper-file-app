@@ -7,6 +7,10 @@ streamlit-autorefresh>=0.1.1
 
 faster-whisper>=0.10.0
 
+# API requests
+
+requests>=2.31.0
+
 # Optional: GPU support (install CUDA‑enabled PyTorch first if you want GPU)
 
 # torch==2.\*

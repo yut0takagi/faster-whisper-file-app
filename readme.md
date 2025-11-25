@@ -45,6 +45,38 @@ streamlit run whisper_file_app.py
 
 ---
 
+## 🐳 Docker
+
+Build once, then run on port 8501:
+
+```bash
+# Build
+docker build -t faster-whisper-file-app .
+
+# Run (CPU)
+docker run --rm -p 8501:8501 \
+  -v fw_cache:/root/.cache \
+  --name fw-app faster-whisper-file-app
+
+# Optional: Run with NVIDIA GPU
+# Requires recent NVIDIA drivers + nvidia-container-toolkit
+docker run --rm -p 8501:8501 \
+  --gpus all \
+  -v fw_cache:/root/.cache \
+  --name fw-app-gpu faster-whisper-file-app
+```
+
+Or use Compose:
+
+```bash
+docker compose up --build
+# then visit http://localhost:8501
+```
+
+Models and tokenizer files are cached under `/root/.cache` and persisted via the named volume (`fw_cache` or `model_cache` in compose).
+
+---
+
 ## 📂 Project Structure
 
 ```
