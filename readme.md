@@ -1,287 +1,154 @@
-# 🎧 Faster-Whisper File Transcriber
+# 🌌 Faster-Whisper Transcriber
 
-音声ファイルをアップロードして、Faster-Whisperで文字起こしを行い、LMStudio APIを使って議事録を生成するアプリケーションです。
+<div align="center">
 
-## ✨ 機能
+![Banner](docs/demo.png)
 
-| 機能 | 説明 |
-|------|------|
-| **📤 ファイルアップロード** | `.wav`, `.mp3`, `.m4a`, `.aac`, `.flac`, `.ogg` 形式の音声ファイルに対応 |
-| **🚀 Faster-Whisper** | [faster-whisper](https://github.com/guillaumekln/faster-whisper) による高速文字起こし（CPU/GPU対応） |
-| **📊 進捗表示** | リアルタイムで処理進捗を表示 |
-| **🔀 モデル選択** | `tiny` / `base` / `small` / `medium` / `large` から選択可能 |
-| **📝 Markdown出力** | 文末記号（`。！？!?`）で分割されたMarkdown形式でダウンロード可能 |
-| **📋 議事録生成** | LMStudio APIを使用して文字起こし結果を議事録として自動整理 |
-| **⚙️ API設定** | LMStudio APIの接続テストとモデル一覧取得機能 |
-| **🎨 モダンUI** | Next.js + shadcn/uiによる美しいユーザーインターフェース |
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14+-black.svg?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104+-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
----
+**音声文字起こし & AI議事録生成の決定版**
+<br>
+ローカル環境で完結する、高速・高精度・セキュアなAIソリューション
 
-## 🏗️ アーキテクチャ
+[✨ 特徴](#-features) • [🚀 クイックスタート](#-quick-start) • [🛠️ 構成](#%EF%B8%8F-architecture) • [📸 ギャラリー](#-gallery)
 
-- **フロントエンド**: Next.js 16+ (React 19, TypeScript, Tailwind CSS, shadcn/ui)
-- **バックエンド**: FastAPI (Python 3.11+)
-- **文字起こしエンジン**: Faster-Whisper
-- **議事録生成**: LMStudio API
+</div>
 
 ---
 
-## 🚀 クイックスタート
+## 🔮 概要
 
-### Docker Compose（推奨）
+**Faster-Whisper Transcriber** は、最先端のAI技術を融合させた、次世代の音声処理プラットフォームです。
 
-最も簡単な起動方法：
+OpenAIの **Whisper** モデルを高速化した **Faster-Whisper** エンジンを搭載し、驚異的なスピードで音声をテキスト化。さらに、**LMStudio** との連携により、ローカルLLMを用いて即座に要約・議事録を作成します。これらすべてが、あなたのマシンの中で完結します。プライバシーは完全に守られます。
+
+## ✨ Features
+
+### ⚡️ Blazing Fast Transcription
+**Faster-Whisper** エンジンを採用し、従来のWhisperと比較して最大 **4倍** の推論速度を実現。GPU（CUDA）アクセラレーションにも完全対応。
+
+### 🤖 AI-Powered Summarization
+文字起こし結果を **LMStudio** (Local LLM) にシームレスに送信。会議の議事録、要約、アクションアイテムの抽出を自動化します。
+
+### 🎨 Stunning UI/UX
+**Aurora Glassmorphism** デザインを採用した、没入感のあるモダンなインターフェース。
+- **Drag & Drop**: 直感的なファイル操作
+- **Real-time Progress**: 詳細な進捗表示
+- **Interactive**: 滑らかなマイクロインタラクション
+
+### 🔒 Privacy First
+データは外部サーバーに送信されません。すべての処理はローカルネットワーク内で完結するため、機密性の高い会議データも安全です。
+
+---
+
+## 🚀 Quick Start
+
+**Docker Compose** を使用すれば、コマンド一発で環境が立ち上がります。
 
 ```bash
-# リポジトリをクローン
+# 1. リポジトリをクローン
 git clone https://github.com/yut0takagi/faster-whisper-file-app.git
 cd faster-whisper-file-app
 
-# Docker Composeで起動
+# 2. 起動（魔法のコマンド）
 docker compose up --build
 ```
 
-これで以下が起動します：
-- **フロントエンド**: http://localhost:3000
-- **バックエンド**: http://localhost:8000
+アクセス:
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend**: [http://localhost:8000](http://localhost:8000)
 
-> **Tip:** 初回起動時はFaster-Whisperのモデルがダウンロードされます（`base`モデルで約75MB）。`model_cache`ボリュームに保存されるため、2回目以降は高速に起動します。
-
-### ローカル開発環境
-
-#### 1. バックエンドのセットアップ
-
-```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-#### 2. フロントエンドのセットアップ
-
-```bash
-cd frontend
-npm install
-```
-
-#### 3. 起動
-
-**バックエンドを起動**（ターミナル1）:
-
-```bash
-cd backend
-source venv/bin/activate  # Windows: venv\Scripts\activate
-uvicorn main:app --reload --port 8000
-```
-
-**フロントエンドを起動**（ターミナル2）:
-
-```bash
-cd frontend
-npm run dev
-```
-
-ブラウザで `http://localhost:3000` を開きます。
+> 💡 **Note**: 初回起動時のみ、AIモデルのダウンロード（約数GB）が行われます。コーヒーでも飲みながらお待ちください。次回からは爆速で起動します。
 
 ---
 
-## 📋 使用方法
+## 🛠️ Architecture
 
-### 1. LMStudioのセットアップ
+最新のテックスタックを採用し、パフォーマンスと開発体験を最大化しています。
 
-1. [LMStudio](https://lmstudio.ai/) をインストールして起動
-2. 使用したいモデルをダウンロード
-3. 「Local Server」タブで「Start Server」をクリック
-4. 表示されたAPI URLとモデル名を確認（例: `http://localhost:1234`、モデル: `openai/gpt-oss-20b`）
-
-### 2. アプリの設定
-
-1. サイドバーの「⚙️ 設定」で以下を入力：
-   - **LMStudio API URL**: `http://localhost:1234/v1/chat/completions`
-   - **LMStudio モデル名**: 使用するモデル名（例: `openai/gpt-oss-20b`）
-2. 「🔌 API接続をテスト」ボタンで接続を確認
-3. （オプション）「議事録を自動生成」にチェックを入れる
-
-### 3. 文字起こし
-
-1. 「📤 音声ファイルをアップロード」セクションで：
-   - モデルサイズを選択（推奨: `base`）
-   - 音声ファイルを選択
-   - 「文字起こしを開始」をクリック
-2. 処理が完了すると、文字起こし結果が表示されます
-3. 「📥 Markdown をダウンロード」で結果を保存
-
-### 4. 議事録生成
-
-1. 文字起こし完了後、「📋 議事録生成」セクションで：
-   - 「🔍 議事録を生成」をクリック（自動生成がオフの場合）
-   - または、自動生成がオンの場合は自動で生成されます
-2. 生成された議事録を確認
-3. 「📥 議事録をダウンロード」で保存
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Frontend** | ![Next.js](https://img.shields.io/badge/-Next.js-black?logo=next.js) ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white) ![Tailwind](https://img.shields.io/badge/-Tailwind-38B2AC?logo=tailwind-css&logoColor=white) | **App Router**, **Server Actions**, **Framer Motion**, **shadcn/ui** を駆使したモダンなSPA。 |
+| **Backend** | ![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white) ![FastAPI](https://img.shields.io/badge/-FastAPI-009688?logo=fastapi&logoColor=white) | 非同期処理に特化した高速APIサーバー。WebSocket対応。 |
+| **AI Engine** | ![Whisper](https://img.shields.io/badge/-Faster--Whisper-FF6F00) | CTranslate2ベースの最適化された推論エンジン。int8量子化でメモリ効率を最大化。 |
+| **LLM Integration** | ![LMStudio](https://img.shields.io/badge/-LMStudio-5C2D91) | OpenAI互換APIを通じてローカルLLMと連携。 |
 
 ---
 
-## 🐳 Docker詳細
+## 📖 Usage Guide
 
-### サービス構成
+### 1. Setup LMStudio (Optional)
+議事録生成機能を使用する場合、[LMStudio](https://lmstudio.ai/) をセットアップします。
 
-- **backend**: FastAPI + Faster-Whisper
-  - ポート: 8000
-  - モデルキャッシュ: `model_cache` ボリュームに永続化
+1. LMStudioを起動し、好みのモデル（例: `openai/gpt-oss-20b`）をロード。
+2. **"Local Server"** タブを開き、サーバーをスタート。
+3. アプリのサイドバー設定で、API URLを確認（デフォルトで設定済み）。
 
-- **frontend**: Next.js
-  - ポート: 3000
-  - ホットリロード対応（ソースコード変更を自動反映）
+### 2. Transcribe
+1. **Model Size** を選択（`tiny` 〜 `large`）。
+2. 音声ファイルをドロップエリアに投げ込むだけ。
+3. 魔法のようにテキストが生成されます。
 
-### GPUサポート
-
-NVIDIA GPUを使用する場合、`docker-compose.yml`の`backend`サービスに以下を追加：
-
-```yaml
-deploy:
-  resources:
-    reservations:
-      devices:
-        - driver: nvidia
-          count: 1
-          capabilities: [gpu]
-```
-
-### ログの確認
-
-```bash
-# すべてのサービスのログ
-docker compose logs -f
-
-# 特定のサービスのログ
-docker compose logs -f backend
-docker compose logs -f frontend
-```
-
-### 停止・削除
-
-```bash
-# 停止
-docker compose down
-
-# 停止 + ボリューム削除（モデルキャッシュも削除）
-docker compose down -v
-```
+### 3. Generate Minutes
+1. 文字起こし完了後、**"Generate Minutes"** ボタンをクリック。
+2. AIが内容を分析し、構造化された議事録を出力します。
+3. Markdown形式でダウンロードして、NotionやObsidianに貼り付けましょう。
 
 ---
 
-## 📂 プロジェクト構造
+## 🐳 Docker & GPU
+
+NVIDIA GPUをお持ちですか？爆速の世界へようこそ。
+
+`docker-compose.yml` のコメントアウトを外すか、以下のコマンドでGPUを有効化して起動します。
+
+```bash
+docker compose --profile gpu up --build
+```
+
+*※ NVIDIA Container Toolkitのインストールが必要です。*
+
+---
+
+## 📂 Project Structure
 
 ```
 faster-whisper-file-app/
-├── frontend/                 # Next.jsフロントエンド
-│   ├── app/                  # App Router
-│   │   ├── page.tsx         # メインページ
-│   │   └── globals.css      # グローバルスタイル
-│   ├── components/          # Reactコンポーネント
-│   │   ├── ui/              # shadcn/uiコンポーネント
-│   │   ├── FileUpload.tsx   # ファイルアップロード
-│   │   ├── Settings.tsx     # 設定パネル
-│   │   ├── TranscriptView.tsx # 文字起こし結果表示
-│   │   └── MinutesView.tsx  # 議事録表示
-│   ├── lib/                 # ユーティリティ
-│   │   ├── api.ts           # API設定
-│   │   └── utils.ts         # 共通関数
-│   ├── package.json
-│   └── Dockerfile
-├── backend/                  # FastAPIバックエンド
-│   ├── main.py              # APIエンドポイント
-│   ├── requirements.txt     # Python依存関係
-│   └── Dockerfile
-├── docker-compose.yml        # Docker Compose設定
-├── whisper_file_app.py       # 旧Streamlit版（参考用）
-└── readme.md                 # このファイル
+├── 📂 frontend/          # Next.js 14+ (The Face)
+│   ├── 📂 app/           # App Router & Layouts
+│   ├── 📂 components/    # Shadcn UI & Motion Components
+│   └── 📂 lib/           # Utilities & API Clients
+├── 📂 backend/           # FastAPI (The Brain)
+│   ├── 📜 main.py        # API Endpoints
+│   └── 📜 requirements.txt
+├── 📜 docker-compose.yml # Orchestration
+└── 📜 README.md          # This File
 ```
 
 ---
 
-## ⚙️ 環境変数
+## 🤝 Contributing
 
-### バックエンド
+コントリビューションは大歓迎です！バグ報告、機能追加、UIの改善など、プルリクエストをお待ちしています。
 
-- `HF_HOME`: Hugging Faceキャッシュディレクトリ（デフォルト: `/root/.cache/huggingface`）
-- `PORT`: サーバーポート（デフォルト: 8000）
-
-### フロントエンド
-
-- `NEXT_PUBLIC_API_URL`: バックエンドAPIのURL（デフォルト: `http://localhost:8000`）
-- `HOSTNAME`: サーバーのホスト名（Docker用: `0.0.0.0`）
+1. Fork it
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ---
 
-## 🔧 ハードウェア要件
+## 📜 License
 
-| ハードウェア | 推奨設定 | 備考 |
-|------------|---------|------|
-| CPU only | `int8` (自動選択) | 1-10分の音声ファイルで実用的 |
-| NVIDIA GPU | `float16` (自動検出) | CUDA対応GPUで高速処理 |
-| Apple Silicon M-series | `int8` (CPU) | Metalサポートは未対応 |
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-GPUが検出できない場合、自動的にCPU `int8`モードにフォールバックします。
+<div align="center">
 
----
+**Made with ❤️ by Yuto TAKAGI**
 
-## ✂️ 文分割ロジック
-
-文字起こし結果は以下の正規表現で文末記号を基準に分割されます：
-
-```python
-sentences = re.split(r"(?<=[。！？!?])", raw_text)
-formatted = "\n\n".join(s.strip() for s in sentences if s.strip())
-```
-
-必要に応じて正規表現を調整してください。
-
----
-
-## 🐛 トラブルシューティング
-
-### ポートが既に使用されている場合
-
-`docker-compose.yml`でポート番号を変更：
-
-```yaml
-ports:
-  - "8001:8000"  # バックエンド
-  - "3001:3000"  # フロントエンド
-```
-
-### フロントエンドがバックエンドに接続できない場合
-
-1. バックエンドが正常に起動しているか確認：
-   ```bash
-   curl http://localhost:8000/
-   ```
-
-2. ブラウザの開発者ツール（F12）でネットワークエラーを確認
-
-3. `NEXT_PUBLIC_API_URL`環境変数が正しいか確認
-
-### LMStudio API接続エラー
-
-1. LMStudioで「Start Server」が押されているか確認
-2. API URLとポート番号が正しいか確認
-3. モデル名が正しいか確認（「📋 利用可能なモデルを取得」で確認可能）
-
----
-
-## 📜 ライセンス
-
-MIT © 2025 Yuto TAKAGI
-
----
-
-## 🙏 謝辞
-
-* [faster-whisper](https://github.com/guillaumekln/faster-whisper) – 高速なWhisper推論エンジン
-* [Next.js](https://nextjs.org/) – Reactフレームワーク
-* [shadcn/ui](https://ui.shadcn.com/) – 美しいUIコンポーネント
-* [FastAPI](https://fastapi.tiangolo.com/) – モダンなPython Webフレームワーク
-* [LMStudio](https://lmstudio.ai/) – ローカルLLM実行環境
-* [OpenAI Whisper](https://github.com/openai/whisper) – 音声認識モデル
+</div>
